@@ -1,12 +1,47 @@
-name: Run with self-hosted
-
+name: Deploy to EC2 IIS
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  example:
+  deploy:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
-      - run: echo "Running on my local runner!"
+    - uses: actions/checkout@v3
+    
+    - name: Connect to EC2 and create folder
+      run: |
+        $ec2Host = "51.84.166.213"
+        $username = "Administrator"
+        $password = "R38u04$tHk(haX.mkjmgXY39e-=9XqYn"
+        
+        # Create credential object
+        $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+        $credential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
+        
+        # Connect to EC2 and create a basic folder in IIS
+        Invoke-Command -ComputerName $ec2Host -Credential $credential -ScriptBlock {
+          # Import IIS module
+          Import-Module WebAdministration
+          
+          # Create a new folder in the default IIS directory
+          $folderPath = "C:\inetpub\wwwroot\TestDeployment"
+          
+          if (!(Test-Path $folderPath)) {
+            New-Item -ItemType Directory -Path $folderPath -Force
+            Write-Host "Created folder: $folderPath"
+          } else {
+            Write-Host "Folder already exists: $folderPath"
+          }
+          
+          # Create a simple test file
+          $testFile = "$folderPath\test.txt"
+          $textContent = "testing"
+          
+          Set-Content -Path $testFile -Value $textContent
+          Write-Host "Created test file: $testFile"
+          
+          # List contents to verify
+          Get-ChildItem $folderPath
+        }
+      shell: powershell
