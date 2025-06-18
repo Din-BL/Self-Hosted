@@ -11,7 +11,6 @@ jobs:
     
     - name: Connect to EC2 and create folder
       run: |
-        # Replace these with your actual values
         $ec2Host = "51.16.37.66"
         $username = "winrmuser"
         $password = "WinRMPass123!"
