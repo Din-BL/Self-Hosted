@@ -11,21 +11,23 @@ jobs:
     
     - name: Connect to EC2 and create folder
       run: |
-        $ec2Host = "51.16.37.66"
-        $username = "winrmuser"
-        $password = "WinRMPass123!"
+        # Replace these with your actual values
+        $ec2Host = "YOUR_EC2_PUBLIC_IP_OR_DNS"
+        $username = "YOUR_WINRM_USERNAME"
+        $password = "YOUR_EC2_PASSWORD"
         
         # Create credential object
         $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
         $credential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
         
         # Connect to EC2 and create a basic folder in IIS
-        Invoke-Command -ComputerName $ec2Host -Credential $credential -Authentication Basic -ScriptBlock {
+        Invoke-Command -ComputerName $ec2Host -Credential $credential -ScriptBlock {
           # Import IIS module
           Import-Module WebAdministration
           
-          # Create a new folder in the default IIS directory
-          $folderPath = "C:\inetpub\wwwroot\TestDeployment"
+          # Create a new folder with current date and time
+          $currentDateTime = Get-Date -Format "yyyyMMdd_HHmmss"
+          $folderPath = "C:\inetpub\wwwroot\active_$currentDateTime"
           
           if (!(Test-Path $folderPath)) {
             New-Item -ItemType Directory -Path $folderPath -Force
