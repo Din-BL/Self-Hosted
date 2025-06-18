@@ -43,6 +43,23 @@ jobs:
           Set-Content -Path $testFile -Value $textContent
           Write-Host "Created test file: $testFile"
           
+          # Copy required files and folders to the active folder
+          $sourceItems = @(
+            "C:\inetpub\wwwroot\bin",
+            "C:\inetpub\wwwroot\web.config",
+            "C:\inetpub\wwwroot\log4net.config",
+            "C:\inetpub\wwwroot\appsettings.json"
+          )
+          
+          foreach ($item in $sourceItems) {
+            if (Test-Path $item) {
+              Copy-Item -Path $item -Destination $folderPath -Recurse -Force
+              Write-Host "Copied: $item to $folderPath"
+            } else {
+              Write-Host "Item not found: $item"
+            }
+          }
+          
           # List contents to verify
           Get-ChildItem $folderPath
         }
