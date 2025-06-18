@@ -1,11 +1,3 @@
 ReadMe File For Testing!!
 
 
-# Test basic connectivity
-Test-NetConnection -ComputerName "51.16.37.66" -Port 5985
-
-# Test WinRM connection
-$securePassword = ConvertTo-SecureString "R38u04$tHk(haX.mkjmgXY39e-=9XqYn" -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential("Administrator", $securePassword)
-
-Test-WSMan -ComputerName "51.16.37.66" -Credential $credential
