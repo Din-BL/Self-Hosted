@@ -1,0 +1,12 @@
+name: Run with self-hosted
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  example:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Running on my local runner!"
