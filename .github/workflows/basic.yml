@@ -13,15 +13,15 @@ jobs:
       run: |
         # Replace these with your actual values
         $ec2Host = "51.16.37.66"
-        $username = "Administrator"
-        $password = "R38u04$tHk(haX.mkjmgXY39e-=9XqYn"
+        $username = "winrmuser"
+        $password = "WinRMPass123!"
         
         # Create credential object
         $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
         $credential = New-Object System.Management.Automation.PSCredential($username, $securePassword)
         
         # Connect to EC2 and create a basic folder in IIS
-        Invoke-Command -ComputerName $ec2Host -Credential $credential -ScriptBlock {
+        Invoke-Command -ComputerName $ec2Host -Credential $credential -Authentication Basic -ScriptBlock {
           # Import IIS module
           Import-Module WebAdministration
           
