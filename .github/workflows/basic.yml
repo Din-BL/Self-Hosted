@@ -2,6 +2,7 @@ name: Deploy to EC2 IIS
 on:
   push:
     branches: [main]
+
 jobs:
   deploy:
     runs-on: self-hosted
@@ -11,12 +12,9 @@ jobs:
     - name: Connect to EC2 and create folder
       run: |
         # Replace these with your actual values
-        $ec2Host = "51.84.166.213"
+        $ec2Host = "51.16.37.66"
         $username = "Administrator"
         $password = "R38u04$tHk(haX.mkjmgXY39e-=9XqYn"
-        
-        # Add EC2 host to trusted hosts
-        Set-Item WSMan:\localhost\Client\TrustedHosts -Value $ec2Host -Force
         
         # Create credential object
         $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
