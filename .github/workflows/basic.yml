@@ -36,13 +36,6 @@ jobs:
             Write-Host "Folder already exists: $folderPath"
           }
           
-          # Create a simple test file
-          $testFile = "$folderPath\test.txt"
-          $textContent = "testing"
-          
-          Set-Content -Path $testFile -Value $textContent
-          Write-Host "Created test file: $testFile"
-          
           # Copy required files and folders to the active folder
           $sourceItems = @(
             "C:\inetpub\wwwroot\bin",
@@ -55,6 +48,17 @@ jobs:
             if (Test-Path $item) {
               Copy-Item -Path $item -Destination $folderPath -Recurse -Force
               Write-Host "Copied: $item to $folderPath"
+            } else {
+              Write-Host "Item not found: $item"
+            }
+          }
+          
+          # Copy the same files to the waiting folder
+          $waitingPath = "C:\inetpub\wwwroot\waiting"
+          foreach ($item in $sourceItems) {
+            if (Test-Path $item) {
+              Copy-Item -Path $item -Destination $waitingPath -Recurse -Force
+              Write-Host "Copied: $item to $waitingPath"
             } else {
               Write-Host "Item not found: $item"
             }
