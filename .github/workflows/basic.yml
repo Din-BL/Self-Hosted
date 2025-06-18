@@ -39,7 +39,6 @@ jobs:
           # Copy required files and folders to the active folder
           $sourceItems = @(
             "C:\inetpub\wwwroot\bin",
-            "C:\inetpub\wwwroot\web.config",
             "C:\inetpub\wwwroot\log4net.config",
             "C:\inetpub\wwwroot\appsettings.json"
           )
@@ -63,6 +62,15 @@ jobs:
               Write-Host "Item not found: $item"
             }
           }
+          
+          # Update Default Web Site to serve content from the waiting folder
+          Set-ItemProperty -Path "IIS:\Sites\Default Web Site" -Name physicalPath -Value $waitingPath
+          Write-Host "Updated Default Web Site physical path to: $waitingPath"
+          
+          # Restart the website to apply changes
+          Stop-Website -Name "Default Web Site"
+          Start-Website -Name "Default Web Site"
+          Write-Host "Restarted Default Web Site"
           
           # List contents to verify
           Get-ChildItem $folderPath
